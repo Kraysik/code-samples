@@ -1,9 +1,9 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { LoadingButton } from '@mui/lab';
-import { Button, Container, Grid, Modal, Stack, TextField, Typography } from '@mui/material';
+import { Button, Container, Grid, Modal, Stack, Typography } from '@mui/material';
 import { useAtom } from '@reatom/react';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import { ContractorType } from '../../models/Contractor';
 import { ContractorContactType } from '../../models/ContractorContactPerson';
@@ -12,6 +12,7 @@ import { invoiceSelectsOptionsAtom } from '../../store/invoice/selectsOptions';
 import { isContractorContactModalOpenAtom } from '../../store/ui/contractorContactModalAtom';
 import { isContractorModalOpenAtom } from '../../store/ui/contractorModalAtom';
 import { isSnackbarOpenAtom, snackbarTextAtom } from '../../store/ui/snackbarAtom';
+import AppInput from '../ui/app-input/app-input';
 import SelectWithSearch from '../ui/select-with-search/select-with-search';
 
 import { StyledCloseBtn, StyledModal } from './styled';
@@ -29,7 +30,10 @@ export default function CreateContractorModal() {
     control,
     formState: { isValid },
     reset,
-  } = useForm<ContractorType>({ mode: 'onChange' });
+  } = useForm<ContractorType>({
+    mode: 'onChange',
+    defaultValues: { name: '', phone: '', email: '', comment: '', contactPerson: '' },
+  });
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
@@ -59,69 +63,30 @@ export default function CreateContractorModal() {
             Добавьте нового контрагента
           </Typography>
           <Stack spacing={2} id="modal-modal-body">
-            <Controller
+            <AppInput<ContractorType>
               name="name"
               control={control}
-              defaultValue=""
+              label="Компания*"
               rules={{ required: 'Данное поле обязательно для заполнения' }}
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Компания*"
-                  color="primary"
-                  helperText={fieldState.error?.message}
-                  error={fieldState.invalid}
-                  inputProps={{ autoComplete: 'off' }}
-                />
-              )}
             />
-            <Controller
+            <AppInput<ContractorType>
               name="phone"
               control={control}
-              defaultValue=""
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Телефон"
-                  color="primary"
-                  helperText={fieldState.error?.message}
-                  error={fieldState.invalid}
-                  inputProps={{ autoComplete: 'off' }}
-                />
-              )}
+              label="Телефон"
+              inputProps={{ autoComplete: 'off' }}
             />
-            <Controller
+            <AppInput<ContractorType>
               name="email"
               control={control}
-              defaultValue=""
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  type="email"
-                  label="Email"
-                  color="primary"
-                  helperText={fieldState.error?.message}
-                  error={fieldState.invalid}
-                  inputProps={{ autoComplete: 'off' }}
-                />
-              )}
+              label="Email"
+              inputProps={{ autoComplete: 'off' }}
             />
-            <Controller
+            <AppInput<ContractorType>
               name="comment"
               control={control}
-              defaultValue=""
-              render={({ field, fieldState }) => (
-                <TextField
-                  {...field}
-                  label="Комментарий"
-                  color="primary"
-                  multiline
-                  rows={4}
-                  helperText={fieldState.error?.message}
-                  error={fieldState.invalid}
-                  inputProps={{ autoComplete: 'off' }}
-                />
-              )}
+              label="Комментарий"
+              inputProps={{ autoComplete: 'off' }}
+              textFieldProps={{ multiline: true, rows: 4 }}
             />
             <Grid container justifyContent="space-between">
               <Grid item xs={9}>
