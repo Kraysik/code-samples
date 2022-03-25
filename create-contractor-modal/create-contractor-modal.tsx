@@ -6,31 +6,36 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 import { ContractorType } from '../../models/Contractor';
-import { createNewContractor, fetchContractorContacts } from '../../repository/contractor';
+import { ContractorContactType } from '../../models/ContractorContactPerson';
+import { createNewContractor } from '../../repository/contractor';
+import { invoiceSelectsOptionsAtom } from '../../store/invoice/selectsOptions';
 import { isContractorContactModalOpenAtom } from '../../store/ui/contractorContactModalAtom';
 import { isContractorModalOpenAtom } from '../../store/ui/contractorModalAtom';
 import { isSnackbarOpenAtom, snackbarTextAtom } from '../../store/ui/snackbarAtom';
-import ContractorContactSelect from '../ui/select-with-search/contractor-contact-select/contractor-contact-select';
+import SelectWithSearch from '../ui/select-with-search/select-with-search';
 
 import { StyledCloseBtn, StyledModal } from './styled';
 
 export default function CreateContractorModal() {
+  const [{ contactPersonOptions }, {}] = useAtom(invoiceSelectsOptionsAtom);
   const [isOpen, { setFalse }] = useAtom(isContractorModalOpenAtom);
   const [isContactOpen, { setTrue: setOpenCreateContact }] = useAtom(isContractorContactModalOpenAtom);
   const [loading, setLoading] = useState<boolean>(false);
   const [isContractorCreated, { setTrue: setIsContractorCreated }] = useAtom(isSnackbarOpenAtom);
   const [snackbarText, { change: changeSnackbarText }] = useAtom(snackbarTextAtom);
+  const [selectOptions, { addContractorOption }] = useAtom(invoiceSelectsOptionsAtom);
   const {
     handleSubmit,
     control,
-    formState: { errors, isValid },
+    formState: { isValid },
     reset,
   } = useForm<ContractorType>({ mode: 'onChange' });
 
   const onSubmit = handleSubmit(async (data) => {
     setLoading(true);
-    await createNewContractor(data);
+    const { data: newContractorData } = await createNewContractor(data);
 
+    addContractorOption(newContractorData);
     reset();
     setLoading(false);
     changeSnackbarText('Контрагент добавлен успешно!');
@@ -120,14 +125,12 @@ export default function CreateContractorModal() {
             />
             <Grid container justifyContent="space-between">
               <Grid item xs={9}>
-                <ContractorContactSelect
+                <SelectWithSearch<ContractorType, ContractorContactType>
                   control={control}
                   name="contactPerson"
                   labelText="Контактное лицо"
-                  isError={!!errors?.contactPerson}
-                  errorMessage={errors?.contactPerson?.message}
                   selectId="contactPerson"
-                  fetchOptions={fetchContractorContacts}
+                  optionsList={contactPersonOptions}
                 />
               </Grid>
               <Grid item xs={2}>
