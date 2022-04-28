@@ -1,0 +1,90 @@
+@use '~@/scss/vars/colors.scss';
+@use '~@/scss/vars/mixins.scss';
+
+.selection {
+  position: relative;
+  //margin-left: -15px;
+  //margin-right: -15px;
+  @media (max-width: 1140px) {
+    //margin-left: mixins.dynamic-vw(1140, -15px);
+    //margin-right: mixins.dynamic-vw(1140, -15px);
+  }
+  @media (max-width: 525px) {
+  }
+
+  .tickets {
+    overflow: hidden;
+
+    > div {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      @media (max-width: 525px) {
+        //padding-left: 15px;
+        //padding-right: 15px;
+      }
+    }
+  }
+
+  .slide-btn {
+    @extend %flex-center;
+    @extend %circle_btn;
+
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: colors.$white;
+    filter: drop-shadow(0px 5px 20px rgba(43, 93, 168, 0.2));
+    transition: background-color .2s ease;
+    @media (max-width: 1440px) {
+      width: mixins.dynamic-vw(1440, 40px);
+      height: mixins.dynamic-vw(1440, 40px);
+    }
+    @media (max-width: 525px) {
+      width: mixins.dynamic-vw(360, 35px);
+      height: mixins.dynamic-vw(360, 35px);
+      display: none;
+    }
+
+    svg {
+      display: block;
+      width: 11px;
+      height: auto;
+      @media (max-width: 1140px) {
+        width: mixins.dynamic-vw(1140, 11px);
+      }
+      @media (max-width: 525px) {
+        width: mixins.dynamic-vw(360, 8px);
+      }
+    }
+
+    &.prev {
+      left: -15px;
+      @media (max-width: 1440px) {
+        left: mixins.dynamic-vw(1440, -15px);
+      }
+      @media (max-width: 525px) {
+        left: mixins.dynamic-vw(360, -2px);
+      }
+    }
+
+    &.next {
+      right: -15px;
+      @media (max-width: 1440px) {
+        right: mixins.dynamic-vw(1440, -15px);
+      }
+      @media (max-width: 525px) {
+        right: mixins.dynamic-vw(360, -2px);
+      }
+
+      svg {
+        transform: rotate(180deg);
+        transform-origin: center;
+      }
+    }
+  }
+}

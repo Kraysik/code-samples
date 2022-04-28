@@ -1,0 +1,16 @@
+@use '~@/scss/vars/colors.scss';
+@use '~@/scss/vars/mixins.scss';
+
+.multiTicket {
+  background-color: colors.$white;
+  width: 100%;
+  border-radius: 15px;
+  padding: 25px 30px;
+  @media (max-width: 525px) {
+    max-width: mixins.dynamic-vw(360, 330px);
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: mixins.dynamic-vw(360, 15px);
+    padding: mixins.dynamic-vw(360, 21px) mixins.dynamic-vw(360, 15px);
+  }
+}
